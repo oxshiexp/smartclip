@@ -1,0 +1,62 @@
+version: "3.9"
+
+services:
+  redis:
+    image: redis:7-alpine
+    restart: always
+    ports:
+      - "6379:6379"
+
+  api:
+    build:
+      context: ./backend
+    restart: always
+    env_file: .env
+    environment:
+      REDIS_URL: redis://redis:6379/0
+    volumes:
+      - smartclip-data:/data
+    ports:
+      - "8000:8000"
+    depends_on:
+      - redis
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+  worker:
+    build:
+      context: ./worker
+    restart: always
+    env_file: .env
+    environment:
+      REDIS_URL: redis://redis:6379/0
+    volumes:
+      - smartclip-data:/data
+    depends_on:
+      - redis
+
+  cleanup:
+    build:
+      context: ./worker
+    restart: always
+    env_file: .env
+    volumes:
+      - smartclip-data:/data
+    command: ["/bin/sh", "-c", "while true; do python -m worker.cleanup; sleep 86400; done"]
+
+  web:
+    build:
+      context: ./web
+    restart: always
+    environment:
+      NEXT_PUBLIC_API_URL: http://localhost:8000
+    ports:
+      - "3000:3000"
+    depends_on:
+      - api
+
+volumes:
+  smartclip-data:

@@ -1,0 +1,47 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: 0 0% 100%;
+  --foreground: 222.2 84% 4.9%;
+  --card: 0 0% 100%;
+  --primary: 222.2 47.4% 11.2%;
+  --border: 214.3 31.8% 91.4%;
+}
+
+.dark {
+  --background: 222.2 84% 4.9%;
+  --foreground: 210 40% 98%;
+  --card: 222.2 84% 4.9%;
+  --primary: 210 40% 98%;
+  --border: 217.2 32.6% 17.5%;
+}
+
+body {
+  @apply bg-background text-foreground;
+}
+
+.container-page {
+  @apply mx-auto w-full max-w-6xl px-6;
+}
+
+.card {
+  @apply rounded-2xl border border-border bg-card p-6 shadow-sm;
+}
+
+.badge {
+  @apply inline-flex items-center rounded-full border border-border px-3 py-1 text-xs font-medium;
+}
+
+.button-primary {
+  @apply inline-flex items-center justify-center rounded-xl bg-foreground px-4 py-2 text-sm font-semibold text-background;
+}
+
+.button-secondary {
+  @apply inline-flex items-center justify-center rounded-xl border border-border px-4 py-2 text-sm font-semibold;
+}
+
+.input {
+  @apply w-full rounded-xl border border-border bg-transparent px-4 py-2 text-sm;
+}
